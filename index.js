@@ -49,56 +49,56 @@ cloudinary.config({
 
 
 
-// app.post('/send', async(req, res) => {
-//   let {name, location, descripition, Fees, timings} = {...req.body};
+app.post('/send', async(req, res) => {
+  let {name, location, descripition, Fees, timings} = {...req.body};
 
-//   let img1 = req.files.image1.tempFilePath;
-//   let img2 = req.files.image2.tempFilePath;
-//   let img3 = req.files.image3.tempFilePath;
-//   let imagearr = [img1, img2, img3];
-//   let URL = [];
+  let img1 = req.files.image1.tempFilePath;
+  let img2 = req.files.image2.tempFilePath;
+  let img3 = req.files.image3.tempFilePath;
+  let imagearr = [img1, img2, img3];
+  let URL = [];
 
-//   // Create an array of promises for the upload tasks
-//   let uploadPromises = imagearr.map(imagePath => {
-//     return new Promise((resolve, reject) => {
-//       cloudinary.uploader.upload(imagePath, (err, result) => {
-//         if (err) {
-//           console.error("This is error:", err);
-//           reject(err);
-//         } else {
-//           console.log(result.secure_url);
-//           resolve(result.secure_url);
-//         }
-//       });
-//     });
-//   });
+  // Create an array of promises for the upload tasks
+  let uploadPromises = imagearr.map(imagePath => {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(imagePath, (err, result) => {
+        if (err) {
+          console.error("This is error:", err);
+          reject(err);
+        } else {
+          console.log(result.secure_url);
+          resolve(result.secure_url);
+        }
+      });
+    });
+  });
 
-//   // Wait for all the uploads to complete
-//   try {
-//     URL = await Promise.all(uploadPromises);
-//     console.log(URL); // URL array should now contain all the secure URLs
+  // Wait for all the uploads to complete
+  try {
+    URL = await Promise.all(uploadPromises);
+    console.log(URL); // URL array should now contain all the secure URLs
 
-//     let id;
-//     let dataCollection = await db.collection('Collection').find().toArray();
+    let id;
+    let dataCollection = await db.collection('Collection').find().toArray();
 
-//     if (dataCollection.length === 0 && URL.length > 0) {
-//       id = 1;
-//       let data = await db.collection('Collection').insertOne({id, name, location, descripition, Fees, timings, URL});
-//       res.send(data);
-//     }
-//      else {
-//       id= dataCollection [dataCollection.length-1].id  +1;
-//       // console.log(id)
-//       let data = await db.collection('Collection').insertOne({id, name, location, descripition, Fees, timings, URL});
-//       res.send(data);
+    if (dataCollection.length === 0 && URL.length > 0) {
+      id = 1;
+      let data = await db.collection('Collection').insertOne({id, name, location, descripition, Fees, timings, URL});
+      res.send(data);
+    }
+     else {
+      id= dataCollection [dataCollection.length-1].id  +1;
+      // console.log(id)
+      let data = await db.collection('Collection').insertOne({id, name, location, descripition, Fees, timings, URL});
+      res.send(data);
 
-//     }
-//   }
-//    catch (error) {
-//     console.error("Error uploading images:", error);
-//     // res.status(500).send("Error uploading images");
-//   }
-// });
+    }
+  }
+   catch (error) {
+    console.error("Error uploading images:", error);
+    // res.status(500).send("Error uploading images");
+  }
+});
 
 
 app.get('/', async(req,res)=>{
