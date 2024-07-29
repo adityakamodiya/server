@@ -21,36 +21,28 @@ cloudinary.config({
 });
 
 
-// Determine the directory name
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-
-// Multer storage configuration
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, './public');
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, file.originalname);
-//   }
-// });
-
-// Multer instance with the storage configuration
-// const upload = multer({ storage: storage });
-
-// File upload endpoint
-// app.post('/upload', upload.single('filee'), (req, res) => {
-//   const filee = req.file;
-  
-//   console.log(filee);
-//   res.send('File uploaded successfully.');   
-// });
 
 
 
 
 app.post('/send', async(req, res) => {
-  let {name, location, descripition, Fees, timings} = {...req.body};
+  // let {name, location, descripition, adultFees,childFees,starttime,endtime} = {...req.body};
+  let name = req.body.name
+    let location = req.body.location
+    let starttime = req.body.starttime
+    let endtime = req.body.endtime
+    let adultfees = req.body.adultFees
+    let childfees = req.body.childFees
+    let currency = "INR"
+    let description = req.body.description
+    let time = {
+      starttime:starttime,
+      endtime:endtime
+  }
+  let fees = {
+      adultfees:adultfees,
+      childfees:childfees
+  }
 
   let img1 = req.files.image1.tempFilePath;
   let img2 = req.files.image2.tempFilePath;
@@ -83,14 +75,14 @@ app.post('/send', async(req, res) => {
 
     if (dataCollection.length === 0 && URL.length > 0) {
       id = 1;
-      let data = await db.collection('Collection').insertOne({id, name, location, descripition, Fees, timings, URL});
-      res.send(data);
+      let data = await db.collection('Collection').insertOne({id, name, location, description, fees,currency, time, URL});
+      // res.send(data);
     }
      else {
       id= dataCollection [dataCollection.length-1].id  +1;
       // console.log(id)
-      let data = await db.collection('Collection').insertOne({id, name, location, descripition, Fees, timings, URL});
-      res.send(data);
+      let data = await db.collection('Collection').insertOne({id, name, location, description, fees, time, URL});
+      res.send("send");
 
     }
   }
@@ -103,24 +95,25 @@ app.post('/send', async(req, res) => {
 
 app.get('/', async(req,res)=>{
   console.log(req.url)
-  let data = await db.collection('Collection').find().toArray();
+  let data = await db.collection('Collection').find({}).project({ _id: 0 }).toArray();
+
+
+
   res.send(data)
+  
 })
 app.get('/:id', async(req,res)=>{
   let id_no = req.url.split('')[1];
   console.log(Number(id_no))
-  let data = await db.collection('Collection').find({id:Number(id_no)}).toArray();
-  console.log(data)
+  // let data = await db.collection('Collection').find({id:Number(id_no)}).toArray();
+  let data = await db.collection('Collection').find({ id: Number(id_no) }).project({ _id: 0 }).toArray();
+
+  
   res.send(data)
+  // console.log(data);
   
 })
-// console.log(data)
-const fun =    async ()=>{
- console.log('hhh')
-// let data =  await db.collection('Collection').find().toArray();
 
-}
-fun();
 
 
 
