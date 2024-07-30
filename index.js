@@ -84,7 +84,7 @@ app.post('/send', async(req, res) => {
       // console.log(id)
       let data = await db.collection('Collection').insertOne({id, name, location, description, fees,currency, time, URL});
       let Data = await db.collection('Collection').find().toArray();
-      res.send(Data);;
+      res.send(data);;
 
     }
   }
