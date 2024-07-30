@@ -76,13 +76,15 @@ app.post('/send', async(req, res) => {
     if (dataCollection.length === 0 && URL.length > 0) {
       id = 1;
       let data = await db.collection('Collection').insertOne({id, name, location, description, fees,currency, time, URL});
-      // res.send(data);
+      let Data = await db.collection('Collection').find().toArray();
+      res.send(Data);
     }
      else {
       id= dataCollection [dataCollection.length-1].id  +1;
       // console.log(id)
       let data = await db.collection('Collection').insertOne({id, name, location, description, fees, time, URL});
-      res.send("send");
+      let Data = await db.collection('Collection').find().toArray();
+      res.send(Data);;
 
     }
   }
