@@ -3,6 +3,7 @@ import cors from "cors";
 import { v2 as cloudinary } from 'cloudinary';
 import fileUpload from "express-fileupload";
 import connection, { dbName } from "./connection.js";
+import { configDotenv } from "dotenv";
 
 const app = express();
 const port = 8002;
@@ -15,9 +16,9 @@ app.use(express.urlencoded({ extended: false }))
 
 
 cloudinary.config({
-  cloud_name: 'da2oqj7qe',
-  api_key: '687377994928293',
-  api_secret: 'GcXxtuXnuQ-LJGycDcmf_DGqw_E'
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.api_key,
+  api_secret: process.env.api_key
 });
 
 
@@ -76,13 +77,15 @@ app.post('/send', async(req, res) => {
     if (dataCollection.length === 0 && URL.length > 0) {
       id = 1;
       let data = await db.collection('Collection').insertOne({id, name, location, description, fees,currency, time, URL});
+      let Data = await db.collection('Collection').find().toArray();
       res.send(data);
     }
      else {
       id= dataCollection [dataCollection.length-1].id  +1;
       // console.log(id)
-      let data = await db.collection('Collection').insertOne({id, name, location, description, Fileees, time, URL});
-      res.send(data);
+      let data = await db.collection('Collection').insertOne({id, name, location, description, fees,currency, time, URL});
+      let Data = await db.collection('Collection').find().toArray();
+      res.send(data);;
 
     }
   }
@@ -95,15 +98,22 @@ app.post('/send', async(req, res) => {
 
 app.get('/', async(req,res)=>{
   console.log(req.url)
-  let data = await db.collection('Collection').find().toArray();
+  let data = await db.collection('Collection').find({}).project({ _id: 0 }).toArray();
+
+
+
   res.send(data)
+  
 })
 app.get('/:id', async(req,res)=>{
   let id_no = req.url.split('')[1];
   console.log(Number(id_no))
-  let data = await db.collection('Collection').find({id:Number(id_no)}).toArray();
+  // let data = await db.collection('Collection').find({id:Number(id_no)}).toArray();
+  let data = await db.collection('Collection').find({ id: Number(id_no) }).project({ _id: 0 }).toArray();
+
   
   res.send(data)
+  // console.log(data);
   
 })
 
