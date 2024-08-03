@@ -19,5 +19,18 @@
 </style>
 <body>
     <p>i have won an <em>Oscar</em></p>
+    <script>
+        fetch("https://jsonmock.hackerrank.com/api/football_matches?competition=UEFA%20Champions%20League&year=2015&page=13")
+    .then((res) => res.json())
+    .then((res) => {
+        console.log(res);
+        
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+    </script>
+
 </body>
 </html>

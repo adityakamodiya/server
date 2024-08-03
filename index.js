@@ -4,7 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import fileUpload from "express-fileupload";
 import connection, { dbName } from "./connection.js";
 import { configDotenv } from "dotenv";
-
+configDotenv();
 const app = express();
 const port = 8002;
 let db;
