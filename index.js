@@ -9,6 +9,7 @@ const app = express();
 const port = 8002;
 let db;
 // Setting up CORS
+
 app.use(express.json());
 app.use(cors({ origin: "*" }))
 app.use(fileUpload({ useTempFiles: true }))
